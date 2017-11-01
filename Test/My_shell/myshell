@@ -1,0 +1,20 @@
+total 36
+lrwxrwxrwx.   1 root root    7 Sep 21 20:27 bin -> usr/bin
+dr-xr-xr-x.   3 root root 4096 Sep 21 22:40 boot
+drwxr-xr-x.  19 root root 3140 Oct 25 16:42 dev
+drwxr-xr-x. 133 root root 8192 Oct 25 16:40 etc
+drwxr-xr-x.   3 root root   23 Sep 23 16:25 home
+lrwxrwxrwx.   1 root root    7 Sep 21 20:27 lib -> usr/lib
+lrwxrwxrwx.   1 root root    9 Sep 21 20:27 lib64 -> usr/lib64
+drwxr-xr-x.   2 root root    6 Mar 13  2014 media
+drwxr-xr-x.   3 root root   39 Oct 24 18:42 mnt
+drwxr-xr-x.   4 root root   46 Oct 21 14:55 opt
+dr-xr-xr-x. 187 root root    0 Oct 25 16:40 proc
+dr-xr-x---.  19 root root 4096 Oct 25 17:22 root
+drwxr-xr-x.  37 root root 1220 Oct 25 16:43 run
+lrwxrwxrwx.   1 root root    8 Sep 21 20:27 sbin -> usr/sbin
+drwxr-xr-x.   2 root root    6 Mar 13  2014 srv
+dr-xr-xr-x.  13 root root    0 Oct 25 16:40 sys
+drwxrwxrwt.  78 root root 4096 Oct 25 21:08 tmp
+drwxr-xr-x.  13 root root 4096 Sep 21 20:27 usr
+drwxr-xr-x.  22 root root 4096 Oct 25 16:40 var
