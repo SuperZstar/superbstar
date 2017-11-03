@@ -26,13 +26,18 @@ int main(void)
     char buf[BUF_SIZE];
     int len;
     pid_t pid;
-    int staute;
+    int status;
 
     umask(0);
-    if(mkfifo(FIFO_WRITE, S_IFIFO|0666))
+
+    int ret = access(FIFO_WRITE, F_OK);
+    if(ret == -1)
     {
-        printf("Can't create FIFO %s because %s", FIFO_WRITE, strerror(errno));
-        exit(1);
+        if(mkfifo(FIFO_WRITE, S_IFIFO|0666))
+        {
+            printf("Can't create FIFO %s because %s", FIFO_WRITE, strerror(errno));
+            exit(1);
+        }
     }
     umask(0);
     wfd = open(FIFO_WRITE, O_WRONLY);
@@ -52,7 +57,7 @@ int main(void)
     {
         if(pid == 0)
         {
-            len = read(rfd, buf, strlen(buf));
+            len = read(rfd, buf, BUF_SIZE);
             if(len > 0)
             {
                 buf[len] = '\0';
@@ -63,14 +68,14 @@ int main(void)
         {
             printf("Server:");
             //fgets(buf, BUF_SIZE, stdin);
-            scanf("%s", &buf);
+            scanf("%s", buf);
             //buf[strlen(buf)-1] = '\0';            //为什么是-1？
             if(strncmp(buf, "quit", 4) == 0)
             {
                 close(wfd);
                 unlink(FIFO_WRITE);
                 close(rfd);
-                wait(&staute);
+                wait(&status);
                 exit(0);
             }
             write(wfd, buf, strlen(buf)+1);

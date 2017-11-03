@@ -25,13 +25,17 @@ int main(void)
     char buf[BUF_SIZE];
     int len;
     pid_t pid;
-    int staute;
+    int status;
 
     umask(0);
-    if(mkfifo(FIFO_WRITE, S_IFIFO|0666))
+    int ret = access(FIFO_WRITE, F_OK);
+    if(ret)
     {
-        printf("Can't create FIFO %s because %s", FIFO_WRITE, strerror(errno));
-        exit(1);
+        if(mkfifo(FIFO_WRITE, S_IFIFO|0666))
+        {
+            printf("Can't create FIFO %s because %s", FIFO_WRITE, strerror(errno));
+            exit(1);
+        }
     }
 
     while((rfd = open(FIFO_READ, O_RDONLY)) == -1)
@@ -63,13 +67,13 @@ int main(void)
             printf("Client:");
             //fgets(buf, BUF_SIZE, stdin);
             //buf[strlen(buf)-1] = '\0';
-            scanf("%s", &buf);
+            scanf("%s", buf);
             if(strncmp(buf, "quit", 4) == 0)
             {
                 close(wfd);
                 unlink(FIFO_WRITE);
                 close(rfd);
-                wait(&staute);
+                wait(&status);
                 exit(0);
             }
             write(wfd, buf, strlen(buf)+1);
