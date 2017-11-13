@@ -7,6 +7,7 @@
  **********************************************************/
 
 #include<stdio.h>
+#include<unistd.h>
 #include<string.h>
 #include<stdlib.h>
 #include<fcntl.h>
@@ -68,7 +69,7 @@ int main(void)
             //fgets(buf, BUF_SIZE, stdin);
             //buf[strlen(buf)-1] = '\0';
             scanf("%s", buf);
-            if(strncmp(buf, "quit", 4) == 0)
+            if(strncmp("quit", buf, 4) == 0)
             {
                 close(wfd);
                 unlink(FIFO_WRITE);

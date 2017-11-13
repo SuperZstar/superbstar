@@ -5,7 +5,7 @@
  *    > Mail: 694041531@qq.com 
  *    > Created Time: Wed 01 Nov 2017 09:09:16 AM CST
  **********************************************************/
-
+//管道全双工输入quit不退出
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -70,7 +70,7 @@ int main(void)
             //fgets(buf, BUF_SIZE, stdin);
             scanf("%s", buf);
             //buf[strlen(buf)-1] = '\0';            //为什么是-1？
-            if(strncmp(buf, "quit", 4) == 0)
+            if(strncmp("quit", buf, 4) == 0)
             {
                 close(wfd);
                 unlink(FIFO_WRITE);
