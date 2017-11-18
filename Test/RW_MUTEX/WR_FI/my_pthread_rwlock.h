@@ -41,6 +41,20 @@ int my_pthread_rwlock_trywrlock(my_pthread_rwlock_t *);
 int my_pthread_rwlock_unlock(my_pthread_rwlock_t *);
 int my_pthread_rwlock_destroy(my_pthread_rwlock_t *);
 
+void clean_wait_rd(void *arg)
+{
+    my_pthread_rwlock_t *rw = (my_pthread_rwlock_t*)arg;
+    rw->rw_nwaitreaders--;
+    pthread_mutex_unlock(&rw->rw_mutex);
+}
+
+void clean_wait_wr(void *arg)
+{
+    my_pthread_rwlock_t *rw = (my_pthread_rwlock_t*)arg;
+    rw->rw_nwaitwriters--;
+    pthread_mutex_unlock(&rw->rw_mutex);
+}
+
 int my_pthread_rwlock_init(my_pthread_rwlock_t *rw, pthread_rwlockattr_t *attr)
 {
     int result;
@@ -81,7 +95,9 @@ int my_pthread_rwlock_rdlock(my_pthread_rwlock_t *rw)
     while(-1 == rw->rw_refcount || rw->rw_nwaitwriters > 0)
     {
         rw->rw_nwaitreaders++;
+        pthread_cleanup_push(clean_wait_rd, rw);
         result = pthread_cond_wait(&rw->rw_condreaders, &rw->rw_mutex);
+        pthread_cleanup_pop(0);
         rw->rw_nwaitreaders--;
         if(0 != result)
             break;
@@ -104,7 +120,9 @@ int my_pthread_rwlock_wrlock(my_pthread_rwlock_t *rw)
     while(0 != rw->rw_refcount)
     {
         rw->rw_nwaitwriters++;
+        pthread_cleanup_push(clean_wait_wr, rw);
         result = pthread_cond_wait(&rw->rw_condwriters, &rw->rw_mutex);
+        pthread_cleanup_pop(0);
         rw->rw_nwaitwriters--;
         if(0 != result)
             break;
@@ -115,12 +133,47 @@ int my_pthread_rwlock_wrlock(my_pthread_rwlock_t *rw)
     return result;
 }
 
-int my_pthread_rwlock_tryrdlock(my_pthread_rwlock_t *rw);
-int my_pthread_rwlock_trywrlock(my_pthread_rwlock_t *rw);
+int my_pthread_rwlock_tryrdlock(my_pthread_rwlock_t *rw)
+{
+    int result;
+    if(rw->rw_magic != RW_MAGIC)
+        return EINVAL;
+    if(0 != (result = pthread_mutex_trylock(&rw->rw_mutex)))
+        return result;
+
+    if(rw->rw_refcount == -1 || rw->rw_nwaitwriters > 0)
+        result = EBUSY;
+    else
+        rw->rw_refcount++;
+    pthread_mutex_unlock(&rw->rw_mutex);
+    return result;
+}
+
+int my_pthread_rwlock_trywrlock(my_pthread_rwlock_t *rw)
+{
+    int result;
+    if(rw->rw_magic != RW_MAGIC)
+        return EINVAL;
+    if(0 != (result = pthread_mutex_lock(&rw->rw_mutex)))
+        return result;
+
+    if(rw->rw_refcount != 0)
+        result = EBUSY;
+    else
+        rw->rw_refcount = -1;
+
+    pthread_mutex_unlock(&rw->rw_mutex);
+    return result;
+}
 
 int my_pthread_rwlock_unlock(my_pthread_rwlock_t *rw)
 {
     int result;
+
+    if(rw->rw_magic != RW_MAGIC)
+        return EINVAL;
+    if(0 != (result = pthread_mutex_lock(&rw->rw_mutex)))
+        return result;
 
     if(rw->rw_refcount > 0)
         rw->rw_refcount--;

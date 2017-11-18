@@ -1,10 +1,10 @@
 
 /**********************************************************
-*    > File Name: rw_mutex.c
-*    > Author: zhangxinxin
-*    > Mail: 694041531@qq.com 
-*    > Created Time: Sat 11 Nov 2017 04:15:07 PM CST
-**********************************************************/
+ *    > File Name: rw_mutex.c
+ *    > Author: zhangxinxin
+ *    > Mail: 694041531@qq.com 
+ *    > Created Time: Sat 11 Nov 2017 04:15:07 PM CST
+ **********************************************************/
 
 #include"my_pthread_rwlock.h"
 
