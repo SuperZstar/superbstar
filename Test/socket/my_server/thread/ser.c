@@ -6,7 +6,6 @@
  *    > Created Time: Tue 28 Nov 2017 09:45:14 AM CST
  **********************************************************/
 
-#include"../utili.h"
 
 void *thread_handler(void *arg);
 
@@ -25,9 +24,9 @@ int main(char argc, char *argv[])
         pthread_t tid;
         pthread_create(&tid, NULL, thread_handler, &cli_fd);
 
-        //pthread_join(tid, NULL);
     }
 
+    //pthread_join(tid, NULL);
     close(sock_fd);
     return 0;
 }
@@ -65,7 +64,7 @@ void *thread_handler(void *arg)
         int sendbyte = send(cli_fd, &result, sizeof(int), 0);
         if(sendbyte <= 0)
         {
-            fprintf(stderr, "send data error!\n");
+            fprintf(stderr, "Send Data Error!\n");
             //continue;
         }
     }

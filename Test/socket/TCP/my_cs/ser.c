@@ -11,7 +11,7 @@
 int main()
 {
     int sockSer = Socket(AF_INET, SOCK_STREAM, 0);
-    struct in_addr IP;
+    //struct in_addr IP;
 
     struct sockaddr_in addrSer, addrCli;
     memset(&addrSer, 0, sizeof(struct sockaddr_in));
@@ -26,7 +26,7 @@ int main()
     Listen(sockSer, LISTEN_QUEUE_SIZE);
 
     printf("Server wait Client Connect.......\n");
-    int len = sizeof(addrSer);
+    socklen_t len = sizeof(addrSer);
     int cli_fd = Accept(sockSer, (struct sockaddr *)&addrCli, &len);
 
     char sendbuf[BUFFER_SIZE];
