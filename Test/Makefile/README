@@ -1,0 +1,6 @@
+#make1: the example of the most fundamental
+#make2: the rule of implication
+#make3: add $() and some things similar macrosubstitution
+#make -p > rules   this command's function is leaded into compliation rule
+#make4: explain the different of "+=" "=" ":=" and "?="
+#make5: Compile multiple unrelated files
