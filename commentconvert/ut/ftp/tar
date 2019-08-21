@@ -1,0 +1,20 @@
+1> tar -cvf dest_file.tar  src_file
+   tar -xvf xxx.tar
+
+2> zip -r dest_file.zip src_file
+   unzip  xxx.zip
+
+   //gzip
+3> tar -zcvf dest_file.tar.gz src_file
+   tar -zxvf xxx.tar.gz
+
+   //bzip2
+4> tar -jcvf dest_file.tar.bz2 src_file
+   tar -jxvf xxx.tar.bz2
+
+5> install tool
+   ./confiure --prefix=/usr/local
+   make
+   make install 
+
+   yum install xxx -y
