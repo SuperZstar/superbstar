@@ -1,4 +1,0 @@
-# install httpd
-  yum install httpd -y
-
-  /etc/httpd/conf/httpd.conf
